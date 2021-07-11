@@ -1,0 +1,16 @@
+{
+  "name": "10k",
+  "version": "1.0.0-beta.0",
+  "main": "index.js",
+  "license": "CC0-1.0",
+  "scripts": {
+    "deploy": "node deploy",
+    "local-setup": "yarn local-env && node setup-test-env && yarn deploy",
+    "local-env": "cp .env.local .env",
+    "create-accounts": "node create-accounts"
+  },
+  "dependencies": {
+    "@4ire-labs/near-sdk": "^1.0.0-beta.8",
+    "dotenv": "^10.0.0"
+  }
+}

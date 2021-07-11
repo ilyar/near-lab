@@ -1,0 +1,6 @@
+.key/
+node_modules
+.env
+.env.*
+!.env.local
+neardev
