@@ -10,8 +10,8 @@ const NEAR_COUNT = process.env.NEAR_COUNT || 100
 const NEAR_BATCH = process.env.NEAR_BATCH || 10
 
 async function main() {
-  console.log('[NEAR] IN PROGRESS')
   const sender = near.parseAccountNetwork()
+  console.log(`[NEAR ${sender.networkId}] IN PROGRESS`)
   const helper = await helperContract(sender)
   let result = 0
   let batch = []
@@ -42,8 +42,8 @@ async function main() {
       batch = []
     }
   }
-  console.log(`[NEAR] create ${result} accounts`)
-  console.log('[NEAR] DONE')
+  console.log(`[NEAR ${sender.networkId}] create ${result} accounts`)
+  console.log(`[NEAR ${sender.networkId}] DONE`)
 }
 
 main().catch((error) => {

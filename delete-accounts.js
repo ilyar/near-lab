@@ -4,9 +4,9 @@ const path = require('path')
 const fs = require('fs')
 
 async function main() {
-  console.log('[NEAR] IN PROGRESS')
   const sender = near.parseAccountNetwork()
-  const directoryPath = path.join(__dirname, process.env.NEAR_CREDENTIALS_PATH, sender.networkId);
+  console.log(`[NEAR ${sender.networkId}] IN PROGRESS`)
+  const directoryPath = path.join(__dirname, process.env.NEAR_CREDENTIALS_PATH, sender.networkId)
   const deleteList = fs.readdirSync(directoryPath)
     .filter((file) => file.includes(sender.accountId))
     .map((file) => file.slice(0, file.length - 5))
@@ -15,6 +15,7 @@ async function main() {
       const out = {
         accountId: account.accountId,
         status: false,
+        isExistAccount: true,
       }
       if (await near.isExistAccount(account)) {
         try {
@@ -23,6 +24,16 @@ async function main() {
           out.status = true
         } catch (error) {
           out.error = error.toString()
+        }
+      } else {
+        out.isExistAccount = false
+      }
+      if (out.isExistAccount === false || out.status === true) {
+        try {
+          const keyPath = path.join(directoryPath, `${account.accountId}.json`)
+          fs.unlinkSync(keyPath)
+        } catch(error) {
+          out.error = `${out.error} error on delete key: ${error.toString()}`
         }
       }
       return out
@@ -40,8 +51,8 @@ async function main() {
       return acc
     }, 0)
   })
-  console.log(`[NEAR] delete ${result} accounts`)
-  console.log('[NEAR] DONE')
+  console.log(`[NEAR ${sender.networkId}] delete ${result} accounts`)
+  console.log(`[NEAR ${sender.networkId}] DONE`)
 }
 
 main().catch((error) => {
