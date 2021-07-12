@@ -4,45 +4,38 @@ const {
   helperContract,
   now,
 } = require('./util')
-
+const PromisePool = require('@supercharge/promise-pool')
+const NEAR_CONCURRENCY = parseInt(process.env.NEAR_CONCURRENCY || 1)
 const NEAR_INIT_BALANCE = process.env.NEAR_INIT_BALANCE || '0.003'
-const NEAR_COUNT = process.env.NEAR_COUNT || 100
-const NEAR_BATCH = process.env.NEAR_BATCH || 10
+const NEAR_COUNT = parseInt(process.env.NEAR_COUNT || 100)
 
 async function main() {
   const sender = near.parseAccountNetwork()
   console.log(`[NEAR ${sender.networkId}] IN PROGRESS`)
   const helper = await helperContract(sender)
-  let result = 0
-  let batch = []
-  for (let i = 1; i <= NEAR_COUNT; i += 1) {
-    const newAccount = near.custodianAccount(`${now()}.${sender.accountId}`)
-    batch.push(helper.create_account(
-      newAccount.accountId,
-      newAccount.keyPair.publicKey.toString(),
-      NEAR_INIT_BALANCE,
-    ).then(async (trx) => {
-      await near.writeUnencryptedFileSystemKeyStore(newAccount)
-      return {
-        accountId: newAccount.accountId,
-        transactionId: trx.transactionId,
-        status: trx.value,
-      }
-    }))
-    if (i % NEAR_BATCH === 0) {
-      await Promise.all(batch).then((trxList) => {
-        console.log(trxList)
-        result += trxList.reduce((previousValue, currentValue) => {
-          if (currentValue.status) {
-            previousValue += 1
-          }
-          return previousValue
-        }, 0)
+  const list = Array.from(Array(NEAR_COUNT).keys())
+  const {results, errors} = await PromisePool
+    .for(list)
+    .withConcurrency(NEAR_CONCURRENCY)
+    .process(async () => {
+      const newAccount = near.custodianAccount(`${now()}.${sender.accountId}`)
+      const status = await helper.create_account(
+        newAccount.accountId,
+        newAccount.keyPair.publicKey.toString(),
+        NEAR_INIT_BALANCE,
+      ).then(async (trx) => {
+        await near.writeUnencryptedFileSystemKeyStore(newAccount)
+        return {
+          accountId: newAccount.accountId,
+          transactionId: trx.transactionId,
+          status: trx.value,
+        }
       })
-      batch = []
-    }
-  }
-  console.log(`[NEAR ${sender.networkId}] create ${result} accounts`)
+      console.log(status)
+      return status
+    })
+  console.log('errors:', errors)
+  console.log(`[NEAR ${sender.networkId}] create ${results.length} accounts errors: ${errors.length}`)
   console.log(`[NEAR ${sender.networkId}] DONE`)
 }
 
