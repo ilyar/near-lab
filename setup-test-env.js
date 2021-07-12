@@ -2,7 +2,7 @@ require('dotenv/config')
 const BN = require('bn.js')
 const near = require('@4ire-labs/near-sdk')
 const {
-  createAccount
+  printAccount,
 } = require('./util')
 
 const NEAR_CLONE_ID = process.env.NEAR_CLONE_ID
@@ -18,7 +18,8 @@ async function createSender(sender, local) {
     const state = await near.stateAccount(source)
     amount = (new BN(state.amount)).div(new BN(10).pow(new BN(24))).toString() // TODO use near.toNear(state.amount) after fix https://github.com/4IRE-Labs/near-sdk/issues/16
   }
-  await createAccount(local, sender.accountId, amount)
+  const trx = await near.createAccount(local, sender, amount)
+  printAccount(sender, trx)
 }
 
 async function main() {

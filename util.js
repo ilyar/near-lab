@@ -28,13 +28,6 @@ function printAccount(account, trx) {
   console.log(out)
 }
 
-async function custodianAccount(sender, wallet, amount) {
-  const account = near.custodianAccount(wallet, sender)
-  const trx = await near.createAccount(sender, account, amount)
-  printAccount(account, trx)
-  return account
-}
-
 const now = (unit) => {
   const hrTime = process.hrtime();
   switch (unit) {
@@ -49,7 +42,6 @@ const now = (unit) => {
 }
 
 module.exports = {
-  createAccount: custodianAccount,
   printAccount,
   helperContract,
   now,
