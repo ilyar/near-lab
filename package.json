@@ -1,5 +1,5 @@
 {
-  "name": "10k",
+  "name": "near-lab",
   "version": "1.0.0-beta.0",
   "main": "index.js",
   "license": "CC0-1.0",
@@ -7,6 +7,7 @@
     "deploy": "node deploy",
     "local-setup": "yarn local-env && node setup-test-env && yarn deploy",
     "local-env": "cp .env.local .env",
+    "delete-accounts": "node delete-accounts",
     "create-accounts": "node create-accounts"
   },
   "dependencies": {
