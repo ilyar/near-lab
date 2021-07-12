@@ -49,7 +49,7 @@ const now = (unit) => {
 }
 
 module.exports = {
-  custodianAccount,
+  createAccount: custodianAccount,
   printAccount,
   helperContract,
   now,
