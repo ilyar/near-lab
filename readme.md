@@ -10,6 +10,7 @@ yarn
 ```shell
 yarn local-setup
 yarn create-accounts
+yarn delete-accounts
 ```
 
 ## For test net
@@ -27,4 +28,5 @@ run:
 ```shell
 yarn deploy
 yarn create-accounts
+yarn delete-accounts
 ```
