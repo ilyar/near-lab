@@ -1,6 +1,7 @@
 require('dotenv/config')
 const near = require('@4ire-labs/near-sdk')
 const {
+  resultToString,
   helperContract,
   now,
 } = require('./util')
@@ -17,8 +18,8 @@ async function main() {
   const {results, errors} = await PromisePool
     .for(list)
     .withConcurrency(NEAR_CONCURRENCY)
-    .process(async () => {
-      const newAccount = near.custodianAccount(`${now()}.${sender.accountId}`)
+    .process(async (i) => {
+      const newAccount = near.custodianAccount(`${i}-${now()}.${sender.accountId}`)
       const status = await helper.create_account(
         newAccount.accountId,
         newAccount.keyPair.publicKey.toString(),
@@ -35,7 +36,7 @@ async function main() {
       return status
     })
   console.log('errors:', errors)
-  console.log(`[NEAR ${sender.networkId}] create ${results.length} accounts errors: ${errors.length}`)
+  console.log(`[NEAR ${sender.networkId}] ${resultToString(results, errors)}`)
   console.log(`[NEAR ${sender.networkId}] DONE`)
 }
 

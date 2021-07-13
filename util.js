@@ -41,7 +41,13 @@ const now = (unit) => {
   }
 }
 
+const resultToString = (results = [], errors = []) => {
+  const percentErrors = errors.length > 0 ? Math.round(1 / results.length * errors.length * 10000) / 100 : 0
+  return `result ${results.length} error: ${errors.length} (${percentErrors}%)`
+}
+
 module.exports = {
+  resultToString,
   printAccount,
   helperContract,
   now,

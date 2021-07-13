@@ -3,6 +3,9 @@ const near = require('@4ire-labs/near-sdk')
 const path = require('path')
 const fs = require('fs')
 const PromisePool = require('@supercharge/promise-pool')
+const {
+  resultToString,
+} = require('./util')
 const NEAR_CONCURRENCY = parseInt(process.env.NEAR_CONCURRENCY || 1)
 
 async function main() {
@@ -37,7 +40,7 @@ async function main() {
       return out
     })
   console.log('errors:', errors)
-  console.log(`[NEAR ${sender.networkId}] delete ${results.length} accounts errors: ${errors.length}`)
+  console.log(`[NEAR ${sender.networkId}] ${resultToString(results, errors)}`)
   console.log(`[NEAR ${sender.networkId}] DONE`)
 }
 
