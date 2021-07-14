@@ -4,11 +4,11 @@
   "main": "index.js",
   "license": "UNLICENSED",
   "scripts": {
-    "deploy": "node deploy",
-    "local-setup": "yarn local-env && node setup-test-env && yarn deploy",
-    "local-env": "cp .env.local .env",
-    "delete-accounts": "node delete-accounts",
-    "create-accounts": "node create-accounts"
+    "concurrency-deploy": "node deploy",
+    "concurrency-local-setup": "yarn local-env && node script/setup/test-env && yarn script/concurrency/deploy",
+    "concurrency-delete-accounts": "node script/concurrency/delete-accounts",
+    "concurrency-create-accounts": "node script/concurrency/create-accounts",
+    "local-env": "cp .env.local .env"
   },
   "dependencies": {
     "@4ire-labs/near-sdk": "^1.0.0-beta.8",

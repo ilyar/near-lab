@@ -5,7 +5,7 @@ const fs = require('fs')
 const PromisePool = require('@supercharge/promise-pool')
 const {
   resultToString,
-} = require('./util')
+} = require('../util')
 const NEAR_CONCURRENCY = parseInt(process.env.NEAR_CONCURRENCY || 1)
 
 async function main() {

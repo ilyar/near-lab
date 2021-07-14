@@ -4,7 +4,7 @@ const {
   resultToString,
   helperContract,
   now,
-} = require('./util')
+} = require('../util')
 const PromisePool = require('@supercharge/promise-pool')
 const NEAR_CONCURRENCY = parseInt(process.env.NEAR_CONCURRENCY || 1)
 const NEAR_INIT_BALANCE = process.env.NEAR_INIT_BALANCE || '0.003'
