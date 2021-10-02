@@ -1,0 +1,24 @@
+[package]
+name = "upload"
+version = "0.1.0"
+edition = "2018"
+license = "UNLICENSED"
+
+[package.metadata.scripts]
+fmt = "cargo +nightly fmt"
+build = "cargo wasm && mkdir -p out && cp target/wasm32-unknown-unknown/release/*.wasm out/"
+build-in-docker = """
+docker run --rm \
+  --volume cache:/usr/local/cargo/registry \
+  --volume $(pwd):/code \
+  --workdir /code \
+  nearprotocol/contract-builder cargo wasm && mkdir -p out && cp target/wasm32-unknown-unknown/release/*.wasm out/
+"""
+
+[lib]
+name = "main"
+crate-type = ["cdylib"]
+
+[dependencies]
+near-sdk = "4.0.0-pre.2"
+hex = "0.4.3"

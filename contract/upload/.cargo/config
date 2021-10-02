@@ -1,0 +1,17 @@
+[alias]
+wasm = "build --release --target wasm32-unknown-unknown"
+unit-test = "test --lib"
+
+[build]
+rustflags = [
+  "-C", "link-args=-s", # this which tells the compiler to strip all unused code out
+]
+
+[profile.release]
+codegen-units = 1
+# Tell `rustc` to optimize for small code size.
+opt-level = "s"
+lto = true
+debug = false
+panic = "abort"
+overflow-checks = true
